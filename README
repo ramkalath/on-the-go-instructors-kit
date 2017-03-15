@@ -1,0 +1,29 @@
+Motivation: Often simplest of tools function very well for teaching a group of students or several groups of students from different locations. There are several videoconferencing systems that enable this. Skype, google hangouts etc etc. However, most eLearning tools today in the market are often an over kill. They are extremely complicated to use and have a learning curve. I have implemented a small code that handshakes well with the desired video conferencing software of ur choice to create a small elearning system. With this system the distant teacher can use basic tools like notebook and pen, screen sharing, and simple video chat to teach. I have created a system that is highly portable. You need only a laptop and a spare webcam. Probably a good mic system to capture audio augments the system really well. However, the laptop's builtin mic works just fine too.
+---------------------------------------------------------------------------------------------------------------------------
+
+How the system works: The system creates a new dummy camera device. I have written a script to composite the video of two physical webcams into this dummy device. One of the physical web cam is positioned facing the teacher as one would during a normal video conferencing. Another is positioned viewing a note book or a writing paper. See the figure1.jpg. If the teacher needs to interact with the students, the students get a video of the teacher similar to the one they see on skype. However, if the teacher wishes to show something in writing to students, he clicks a button and the webcam shooting the notebook video is composited with the face video to yeild a composite video in video representation. See figure2.jpg.
+----------------------------------------------------------------------------------------------------------------------
+
+Installation:
+1) sudo apt-get install v4l2loopback-dkms
+2) sudo apt-get install ffmpeg
+3) sudo apt-get install python-pygame
+4) installed and working version of skype or google hangouts or any other video conferencing software of ur liking.
+5) physically setup up the two cameras as shown in figure1.jpg
+------------------------------------------------------------------------------------------------------------------------
+
+code execution instructions:
+1) sudo modprobe v4l2loopback
+2) cd /dev -> ensure that there are 3 video devices video0, video1 and video2 where video2 is a dummy video device created by v4l2loopback. Video0 is the default builtin laptop video device and video1 is the additional webcam that is focussed on the notebook.
+3) sudo chmod +x run.sh
+4) ./run.sh -> after this step a small window appears that has 2 buttons "face" and "note". Upon clicking face, video0 is directly dumped into video2 and upon clicking note, a composite of video0 and video1 is made as in figure2.jpg and dumped into video2. 
+5) open ur video conferencing software and point to video2 and call the remote location. Note: Screen share on skype is enabled with the "+"" button on the call window.
+------------------------------------------------------------------------------------------------------------------------
+
+Incase in step 2 of the "code execution instructions", your video devices are not exactly video0, video1 and video2, then you have to make some minor editings. Open run.sh file using a text editior like gedit and change the video2 in the second line to the dummy video device name. And goto "webcams_compositing_using_pygame.py" and change the numbers in the code of lines
+facecam = pygame.camera.Camera(cameras[<webcam pointing to face>])
+notecam = pygame.camera.Camera(cameras[<webcam pointing to notebook>])
+to the appropritate video devices.
+
+If you want to test and check video devices as to which one shows which I suggest you use cheese.
+sudo apt-get install cheese.
